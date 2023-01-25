@@ -31,5 +31,11 @@ for (i in 1:length(pathcsv)) {
   
 }
 
-write_parquet(x = tableauranking, sink = "csv_compilations.parquet")
+results <- tableauranking %>%
+  group_by(dateranking) %>%
+  arrange(desc(Rating), .by_group = TRUE) %>%
+  mutate(ranking = rank(x = desc(Rating), ties.method = "min")) %>%
+  ungroup()
+
+write_parquet(x = results, sink = "FIDE_standard_compilations_Dahiya.parquet")
 
